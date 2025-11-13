@@ -1,31 +1,35 @@
-import { Suspense } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Index from "../pages/Index";
+import LoginAdmin from "../pages/Login";
+import PaginaRendimiento from "../pages/mqerk/PaginaDash";
 import DashboardMqerk from "../pages/mqerk/Dashboard";
-
-function Layout() {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <header className="px-4 py-3 border-b">MQerk</header>
-      <main className="flex-1 p-4">
-        <Suspense fallback={<div>Cargando…</div>}>
-          <Outlet />
-        </Suspense>
-      </main>
-      <footer className="px-4 py-3 border-t text-sm text-gray-500">© CodeCraft</footer>
-    </div>
-  );
-}
+import Cursos from "../pages/mqerk/Cursos";
+import Plantillapreview from "../pages/mqerk/PlantillaPreview";
+import Asesores from "../pages/mqerk/Asesores";
+import InfoAsesores from "../pages/mqerk/InfoAsesores";
+import AsignacionAsesores from "../pages/mqerk/AsignacionAsesores";
+import { CursosProvider } from "../context/mqerk/CursosContext";
+import { PreviewProvider } from "../context/mqerk/PreviewContext";
 
 function MqerkRoutes() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route index path="/" element={<div>Index Page</div>} />
-        <Route index path="/administrador" element={<Index />} />
-        <Route path="/dashboard" element={<DashboardMqerk />} />
-        <Route path="/administrador_dashboard" element={<div>Administrador Dashboard</div>} />
-      </Routes>
+      <PreviewProvider>
+        <CursosProvider>
+          <Routes>
+            <Route index path="/" element={<LoginAdmin />} />
+            <Route index path="/administrador" element={<Index />} />
+            <Route path="/rendimiento/pagina" element={<PaginaRendimiento />} />
+            <Route path="/dashboard" element={<DashboardMqerk />} />
+            <Route path="/cursos" element={<Cursos />} />
+            <Route path="/previews/nuevo" element={<Plantillapreview />} />
+            <Route path="/previews/:id" element={<Plantillapreview />} />
+            <Route path="/asesores" element={<Asesores />} />
+            <Route path="/asesores/informacion" element={<InfoAsesores />} />
+            <Route path="/asesores/asignacion" element={<AsignacionAsesores />} />
+          </Routes>
+        </CursosProvider>
+      </PreviewProvider>
     </BrowserRouter>
   )
 }

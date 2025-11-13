@@ -24,7 +24,7 @@ function Index() {
         {
           label: "Página Web",
           sublabel: "Vizualizar y generar cambios de la pagina web",
-        //   onClick: () => navigate('/editor'),
+          onClick: () => navigate('/rendimiento/pagina'),
         },
         {
           label: "Plataforma",

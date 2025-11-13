@@ -1,8 +1,8 @@
 import { useMemo, useCallback } from "react";
 
 const ITEMS = [
-  { label: "Inicio",         icon: HomeIcon,     href: "/administrador_dashboard" },
-  { label: "Cursos Activos", icon: CoursesIcon,  href: "/administrador_cursos" },
+  { label: "Inicio",         icon: HomeIcon,     href: "/dashboard" },
+  { label: "Cursos Activos", icon: CoursesIcon,  href: "/cursos" },
   { label: "Certificaciones", icon: CertificateIcon, href: "#" },
   { label: "Roles",          icon: BadgeIcon,    href: "#" },
   { label: "Financiero",     icon: WalletIcon,   href: "/administrador_financieros" },
@@ -11,7 +11,7 @@ const ITEMS = [
   { label: "Gestión",        icon: BellIcon,     href: "/administrador_gestion" },
   { label: "Productividad",  icon: ChartIcon,    href: "/administrador_productividad" },
   { label: "Estratégicos",   icon: TargetIcon,   href: "/administrador_estrategicos" },
-  { label: "Asesores",       icon: UsersIcon,    href: "/administrador_asesores" },
+  { label: "Asesores",       icon: UsersIcon,    href: "/asesores" },
   { label: "Calendario",     icon: CalendarIcon, href: "/administrador_calendario" },
   { label: "Correo",         icon: MailIcon,     href: "#" },
   { label: "Lineamientos y Normativas", icon: DocumentIcon, href: "#" },

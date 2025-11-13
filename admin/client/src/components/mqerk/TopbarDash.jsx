@@ -7,6 +7,7 @@ export default function Topbar({
   settingsPath = "/administrador_configuraciones",
 }) {
   const navigate = useNavigate();
+  
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const menuRef = useRef(null);
@@ -32,7 +33,7 @@ export default function Topbar({
   const goSettings = () => { setOpen(false); navigate(settingsPath); };
 
   return (
-    <header className="sticky top-0 z-50 h-14 md:h-16 w-full border-b border-white/15">
+    <header className="sticky top-0 z-20 h-14 md:h-16 w-full border-b border-white/15">
       <div className="relative flex h-full items-center bg-gradient-to-r from-indigo-700 via-violet-700 to-fuchsia-700 text-white px-3 md:px-4">
         {/* Izquierda: volver + logo */}
         <div className="flex items-center gap-2 md:gap-3">
@@ -75,7 +76,7 @@ export default function Topbar({
             <div
               ref={menuRef}
               role="menu"
-              className="absolute right-0 mt-2 w-44 rounded-lg bg-white/95 text-slate-800 border border-slate-200 backdrop-blur-sm"
+              className="absolute z-50 right-0 mt-2 w-44 rounded-lg bg-white/95 text-slate-800 border border-slate-200 backdrop-blur-sm"
             >
               <button
                 role="menuitem"

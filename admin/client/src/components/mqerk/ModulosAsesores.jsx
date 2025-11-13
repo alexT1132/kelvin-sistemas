@@ -102,14 +102,14 @@ export default function AreasPrincipales() {
           icon={<IconUsers className="h-6 w-6" />}
           title="Asesores"
           subtitle="Gestión de asesores, contacto y seguimiento."
-          href="/administrador_asesores/infotmacion"
+          href="/asesores/informacion"
         />
         <Card
           color="violet"
           icon={<IconTasks className="h-6 w-6" />}
           title="Asignaciones"
           subtitle="Tareas, cursos y distribución de actividades."
-          href="/administrador_asesores/asignaciones"
+          href="/asesores/asignacion"
         />
       </div>
     </section>
