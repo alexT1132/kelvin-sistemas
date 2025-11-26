@@ -47,7 +47,7 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-md">
         {/* Título */}
         <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-12 drop-shadow-lg">
-          Bienvenido a MQerkAcademy
+          Bienvenido
         </h1>
 
         {/* Card del formulario */}

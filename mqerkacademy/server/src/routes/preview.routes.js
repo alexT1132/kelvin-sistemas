@@ -1,28 +1,31 @@
-// routes/preview.routes.js
 import { Router } from "express";
 import {
-  getById,
-  getByCourse,
-  createOne,
-  updateOne,
-  removeOne,
-  uploadVideoHandler,
+  getPreviews,
+  getPreviewById,
+  getPreviewByCourseId,
+  createPreview,
+  updatePreview,
+  deletePreview
 } from "../controllers/preview.controller.js";
-import { uploadPreviewVideo } from "../middlewares/uploadPreviewVideo.js";
 
 const router = Router();
 
-// CRUD json
-router.get("/previews/:id", getById);
+// GET /api/previews - Obtener todos los previews
+router.get("/previews", getPreviews);
 
-router.get("/previews/by-course/:courseId", getByCourse);
+// GET /api/previews/:id - Obtener un preview por ID
+router.get("/previews/:id", getPreviewById);
 
-router.post("/previews", createOne);
+// GET /api/previews/by-course/:courseId - Obtener preview por course_id
+router.get("/previews/by-course/:courseId", getPreviewByCourseId);
 
-router.put("/previews/:id", updateOne);
+// POST /api/previews - Crear un nuevo preview
+router.post("/previews", createPreview);
 
-router.delete("/previews/:id", removeOne);
+// PUT /api/previews/:id - Actualizar un preview
+router.put("/previews/:id", updatePreview);
 
-router.post("/upload", uploadPreviewVideo.single("video"), uploadVideoHandler);
+// DELETE /api/previews/:id - Eliminar un preview
+router.delete("/previews/:id", deletePreview);
 
 export default router;

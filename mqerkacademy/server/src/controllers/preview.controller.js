@@ -1,83 +1,181 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import { getPreviewById, getPreviewByCourse, createPreview, updatePreview, deletePreview } from "../models/previews.model.js";
+import {
+  getPreviewsModel,
+  getPreviewByIdModel,
+  getPreviewByCourseIdModel,
+  createPreviewModel,
+  updatePreviewModel,
+  deletePreviewModel,
+  checkPreviewExistsModel
+} from "../models/previews.model.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Obtener todos los previews
+export const getPreviews = async (req, res) => {
+  try {
+    const previews = await getPreviewsModel();
+    res.json(previews);
+  } catch (error) {
+    console.error("Error al obtener previews:", error);
+    res.status(500).json({ 
+      message: "Error al obtener los previews",
+      error: error.message 
+    });
+  }
+};
 
-/** Convierte arrays a JSON-string si llegan como arrays, y normaliza tipos */
-function parseBody(body) {
-  const J = (v) => (Array.isArray(v) ? JSON.stringify(v) : v ?? null);
-  return {
-    // EXACTAMENTE las claves que envía tu front
-    course_id: Number(body.course_id),
-    tagline: body.tagline ?? null,
-    clases: body.clases ?? null,
-    horas_dia: body.horas_dia ?? null,
-    meta: body.meta ?? null,                    // 🔧 NUEVO
-    price_now: Number(body.price_now ?? 0),
-    price_before: Number(body.price_before ?? 0), // 🔧 NUEVO
-    discount: Number(body.discount ?? 0),        // 🔧 NUEVO
-    features: J(body.features),                  // JSON string
-    desc_text: body.desc_text ?? null,
-    learn_list: J(body.learn_list),              // JSON string
-    areas_list: J(body.areas_list),              // JSON string
-    plans: J(body.plans),                        // JSON string
-    video_url: body.video_url ?? null,
-    rating: Number(body.rating ?? 0),
-  };
-}
+// Obtener preview por ID
+export const getPreviewById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const preview = await getPreviewByIdModel(id);
+    
+    if (!preview) {
+      return res.status(404).json({ 
+        message: "Preview no encontrado" 
+      });
+    }
+    
+    res.json(preview);
+  } catch (error) {
+    console.error("Error al obtener preview:", error);
+    res.status(500).json({ 
+      message: "Error al obtener el preview",
+      error: error.message 
+    });
+  }
+};
 
-export async function getById(req, res) {
-  const row = await getPreviewById(req.params.id);
-  if (!row) return res.status(404).json({ message: "Preview no encontrada" });
-  res.json(row);
-}
+// Obtener preview por course_id
+export const getPreviewByCourseId = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const preview = await getPreviewByCourseIdModel(courseId);
+    
+    if (!preview) {
+      return res.status(404).json({ 
+        message: "No se encontró preview para este curso" 
+      });
+    }
+    
+    res.json(preview);
+  } catch (error) {
+    console.error("Error al obtener preview por curso:", error);
+    res.status(500).json({ 
+      message: "Error al obtener el preview del curso",
+      error: error.message 
+    });
+  }
+};
 
-/** Para tu loadByCourse(passedId) */
-export async function getByCourse(req, res) {
-  const row = await getPreviewByCourse(req.params.courseId);
-  if (!row) return res.status(204).send();
-  res.json(row);
-}
+// Crear nuevo preview
+export const createPreview = async (req, res) => {
+  try {
+    const previewData = req.body;
+    
+    // Validar que venga el course_id
+    if (!previewData.course_id) {
+      return res.status(400).json({ 
+        message: "El course_id es obligatorio" 
+      });
+    }
+    
+    // Verificar si ya existe un preview para este curso
+    const exists = await checkPreviewExistsModel(previewData.course_id);
+    if (exists) {
+      return res.status(409).json({ 
+        message: "Ya existe un preview para este curso. Use actualizar en su lugar." 
+      });
+    }
+    
+    const newPreviewId = await createPreviewModel(previewData);
+    const newPreview = await getPreviewByIdModel(newPreviewId);
+    
+    res.status(201).json({
+      message: "Preview creado exitosamente",
+      preview: newPreview
+    });
+  } catch (error) {
+    console.error("Error al crear preview:", error);
+    
+    // Manejar error de clave foránea
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(400).json({ 
+        message: "El curso especificado no existe" 
+      });
+    }
+    
+    res.status(500).json({ 
+      message: "Error al crear el preview",
+      error: error.message 
+    });
+  }
+};
 
-export async function createOne(req, res) {
-  const dto = parseBody(req.body);
-  if (!dto.course_id) return res.status(400).json({ message: "course_id es requerido" });
-  const row = await createPreview(dto);
-  res.status(201).json(row);
-}
+// Actualizar preview
+export const updatePreview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const previewData = req.body;
+    
+    // Verificar que el preview existe
+    const existingPreview = await getPreviewByIdModel(id);
+    if (!existingPreview) {
+      return res.status(404).json({ 
+        message: "Preview no encontrado" 
+      });
+    }
+    
+    const updated = await updatePreviewModel(id, previewData);
+    
+    if (!updated) {
+      return res.status(400).json({ 
+        message: "No se pudo actualizar el preview" 
+      });
+    }
+    
+    const updatedPreview = await getPreviewByIdModel(id);
+    
+    res.json({
+      message: "Preview actualizado exitosamente",
+      preview: updatedPreview
+    });
+  } catch (error) {
+    console.error("Error al actualizar preview:", error);
+    res.status(500).json({ 
+      message: "Error al actualizar el preview",
+      error: error.message 
+    });
+  }
+};
 
-export async function updateOne(req, res) {
-  const { id } = req.params;
-  const exists = await getPreviewById(id);
-  if (!exists) return res.status(404).json({ message: "Preview no encontrada" });
-  const dto = parseBody(req.body);
-  const row = await updatePreview(id, dto);
-  res.json(row);
-}
-
-export async function removeOne(req, res) {
-  const { id } = req.params;
-  await deletePreview(id);
-  res.status(204).send();
-}
-
-export async function uploadVideoHandler(req, res) {
-  // multer coloca el archivo en req.file
-  if (!req.file) return res.status(400).json({ message: "No se recibió archivo de video" });
-
-  // construye URL pública basada en /uploads
-  const rel = path.join("uploads", "previews", req.file.filename).replace(/\\/g, "/");
-  const url = `/${rel}`; // ejemplo: /uploads/previews/1719772233445_video.mp4
-
-  // Si quisieras también guardar directo en la DB aquí, puedes aceptar course_id en query/body.
-  // En la práctica, devolvemos la URL y el front la manda en video_url al crear/actualizar.
-  return res.status(201).json({
-    filename: req.file.filename,
-    url,           // <-- úsala como video_url
-    path: rel,
-    size: req.file.size,
-    mimetype: req.file.mimetype,
-  });
-}
+// Eliminar preview
+export const deletePreview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Verificar que el preview existe
+    const existingPreview = await getPreviewByIdModel(id);
+    if (!existingPreview) {
+      return res.status(404).json({ 
+        message: "Preview no encontrado" 
+      });
+    }
+    
+    const deleted = await deletePreviewModel(id);
+    
+    if (!deleted) {
+      return res.status(400).json({ 
+        message: "No se pudo eliminar el preview" 
+      });
+    }
+    
+    res.json({
+      message: "Preview eliminado exitosamente"
+    });
+  } catch (error) {
+    console.error("Error al eliminar preview:", error);
+    res.status(500).json({ 
+      message: "Error al eliminar el preview",
+      error: error.message 
+    });
+  }
+};

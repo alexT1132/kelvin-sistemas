@@ -32,9 +32,7 @@ export default function CursosGrid() {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-  navigate(`/${slug}`, {
-    state: { curso } // Pasas todo el objeto
-  });
+  navigate(`/${curso.id}`);
 };
 
   const SeccionCursos = ({ titulo, lista }) => (

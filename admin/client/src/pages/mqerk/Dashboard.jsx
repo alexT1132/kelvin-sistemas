@@ -1,122 +1,55 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import TopbarDash from "../../components/mqerk/TopbarDash";
 import { SidebarRail, SidebarDrawer } from "../../components/mqerk/SidebarAdmin";
-import FloatingSidebarButton  from "../../components/mqerk/FloatingSidebarButton";
-import Subtopbar from "../../components/mqerk/SubTopbar";
-import DetalleSeleccion from "../../components/mqerk/DetalleSeleccion";
-import Graficas1 from "../../components/mqerk/Graficas1";
-import {
-  MiniCard,
-  MiniCardWithChips,
-  IconMoney,
-  IconApps,
-  IconShield,
-  IconLayers,
-  IconUser,
-} from "../../components/mqerk/Sections";
+import FloatingSidebarButton from "../../components/mqerk/FloatingSidebarButton";
+import DashboardPanel from "../../components/mqerk/Dashboard";
 
 function Dashboard() {
-
-    const [openSidebar, setOpenSidebar] = useState(false);
-    const [seleccion, setSeleccion] = useState(null);
-
-    const handleSelect = (data) => {
-        setSeleccion(data);
-    };
+  const [openSidebar, setOpenSidebar] = useState(false);
+  const location = useLocation();
+  
+  // Determinar si estamos en /dashboard para ajustar el padding
+  const isDashboardRoute = location.pathname === "/dashboard";
+  
+  // Padding dinámico según la ruta
+  const mainPadding = isDashboardRoute 
+    ? "pt-[144px] md:pt-[168px]"  // Con panel de controles
+    : "pt-14 md:pt-16";             // Sin panel de controles
 
   return (
-    <div>
-        <TopbarDash
-            title="Asesores Especializados en la Enseñanza de las Ciencias y Tecnología"
-        />
-        <Subtopbar />
-        <section className="mx-auto px-20 py-4">
-            {/* Grid responsive 1→2→3→4 */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                <MiniCardWithChips
-                icon={<IconMoney className="h-4 w-4" />}
-                title="Finanzas"
-                titleColor="violet"
-                subtitle="Semáforo: saludable"
-                href="#"
-                onSelect={handleSelect}
-                />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100">
+      {/* 
+        TopbarDash incluye:
+        1. Barra superior purple (siempre visible)
+        2. Panel de controles (solo en /dashboard)
+      */}
+      <TopbarDash title="Asesores Especializados en la Enseñanza de las Ciencias y Tecnología" />
 
-                <MiniCard
-                icon={<IconApps className="h-4 w-4" />}
-                title="Contabilidad"
-                titleColor="green"
-                href="#"
-                onSelect={handleSelect}
-                />
+      {/* Sidebar fijo para desktop - inicia debajo del topbar purple */}
+      <SidebarRail />
 
-                <MiniCard
-                icon={<IconShield className="h-4 w-4" />}
-                title="Administrativo"
-                titleColor="violet"
-                href="#"
-                onSelect={handleSelect}
-                />
+      {/* 
+        Contenido principal con padding dinámico:
+        - md:ml-16 = margen izquierdo para el sidebar en desktop (64px)
+        - Padding superior varía según la ruta:
+          * /dashboard: pt-[144px] md:pt-[168px] (con panel)
+          * Otras rutas: pt-14 md:pt-16 (sin panel)
+      */}
+      <main className={`md:ml-16 ${mainPadding} min-h-screen`}>
+        <DashboardPanel />
+      </main>
 
-                <MiniCard
-                icon={<IconLayers className="h-4 w-4" />}
-                title="Gestión"
-                titleColor="blue"
-                href="#"
-                onSelect={handleSelect}
-                />
+      {/* Drawer móvil (overlay) - se abre desde la izquierda */}
+      <SidebarDrawer open={openSidebar} onClose={() => setOpenSidebar(false)} />
 
-                <MiniCard
-                icon={<IconUser className="h-4 w-4" />}
-                title="Estrategica"
-                titleColor="pink"
-                href="#"
-                onSelect={handleSelect}
-                />
-
-                <MiniCard
-                icon={<IconUser className="h-4 w-4" />}
-                title="Perfil Asesor"
-                titleColor="blue"
-                href="#"
-                onSelect={handleSelect}
-                />
-            </div>
-        </section>
-        <div className="flex justify-center items-center gap-4 py-6">
-            {/* Positivo · Sobrante */}
-            <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700">
-                Positivo · Sobrante
-            </span>
-
-            {/* Equilibrio */}
-            <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-medium text-amber-700">
-                Equilibrio
-            </span>
-
-            {/* Negativo · Pérdida */}
-            <span className="rounded-full bg-rose-100 px-4 py-2 text-sm font-medium text-rose-700">
-                Negativo · Pérdida
-            </span>
-        </div>
-        <Graficas1 />
-        <DetalleSeleccion data={seleccion} />
-        <div className="flex flex-1">
-            <SidebarRail />
-            
-
-            {/* Drawer móvil */}
-            <SidebarDrawer open={openSidebar} onClose={() => setOpenSidebar(false)} />
-
-            {/* FAB flotante solo móvil */}
-            <FloatingSidebarButton
-                open={openSidebar}
-                onToggle={() => setOpenSidebar((v) => !v)}
-            />
-            
-        </div>
+      {/* Botón flotante solo móvil - abajo izquierda */}
+      <FloatingSidebarButton
+        open={openSidebar}
+        onToggle={() => setOpenSidebar((v) => !v)}
+      />
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

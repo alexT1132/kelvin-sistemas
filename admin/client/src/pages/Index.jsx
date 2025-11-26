@@ -1,17 +1,16 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Topbar from "../components/Topbar";
 import Cards from "../components/Cards";
 import ChoiceModal from "../components/ChoiceModal";
 import Mqerk from "../assets/mqerk/mqerk.png";
 import Kelumy from "../assets/kelumy/kelumy_logo.png";
 import VivirParaPensarMejor from "../assets/vivirparapensarmejor/logo.png";
-import { useNavigate } from "react-router-dom";
 
 function Index() {
-
-    const [modalId, setModalId] = useState(null);
-
-    const navigate = useNavigate();
+  const [modalId, setModalId] = useState(null);
+  const navigate = useNavigate();
 
   const modalConfig = {
     mqerk: {
@@ -23,7 +22,7 @@ function Index() {
       options: [
         {
           label: "Página Web",
-          sublabel: "Vizualizar y generar cambios de la pagina web",
+          sublabel: "Visualizar y generar cambios de la página web",
           onClick: () => navigate('/rendimiento/pagina'),
         },
         {
@@ -76,21 +75,65 @@ function Index() {
   const cfg = modalId ? modalConfig[modalId] : null;
 
   return (
-    <div>
-        <Topbar />
-            <Cards onOpenById={(id) => setModalId(id)} />
-            <ChoiceModal
-                open={!!modalId}
-                onClose={() => setModalId(null)}
-                brand={cfg?.brand}
-                subtitle={cfg?.subtitle}
-                icon={cfg?.icon}
-                color={cfg?.color}
-                gradier={cfg?.gradier}
-                options={cfg?.options || []}
-            />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      <Topbar />
+      
+      {/* Contenedor principal con animación */}
+      <motion.main
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative"
+      >
+        <Cards onOpenById={(id) => setModalId(id)} />
+      </motion.main>
+
+      {/* Modal con animación */}
+      <AnimatePresence>
+        {modalId && (
+          <ChoiceModal
+            open={!!modalId}
+            onClose={() => setModalId(null)}
+            brand={cfg?.brand}
+            subtitle={cfg?.subtitle}
+            icon={cfg?.icon}
+            color={cfg?.color}
+            gradier={cfg?.gradier}
+            options={cfg?.options || []}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Elementos decorativos de fondo */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-1/2 -left-1/4 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-indigo-400/20 to-transparent blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.3, 0.2],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+          className="absolute -bottom-1/2 -right-1/4 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-violet-400/20 to-transparent blur-3xl"
+        />
+      </div>
     </div>
-  )
+  );
 }
 
-export default Index
+export default Index;

@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCursos } from "../../context/mqerk/CursosContext";
-import { usePreview } from "../../context/mqerk/PreviewContext";  // 👈 importa
+import { usePreview } from "../../context/mqerk/PreviewContext";
 
 const cls = (...a) => a.filter(Boolean).join(" ");
 const initials = (name = "") =>
@@ -19,7 +19,6 @@ export default function PreviewsManager() {
   const [selected, setSelected] = useState(null);
   const { cursos, ObtenerCursos } = useCursos();
 
-  // 👇 del context de preview
   const { loadByCourse, setPreview } = usePreview();
 
   useEffect(() => {
@@ -39,17 +38,19 @@ export default function PreviewsManager() {
   // CREAR preview (vacío o con lo que viene del curso)
   const handleCreatePreview = () => {
     if (!selected) return;
-    // opcional: limpiar preview en memoria
     setPreview(null);
     navigate("/previews/nuevo", {
       state: {
         courseId: selected.id,
         courseName: selected.nombre,
         courseModalidad: selected.modalidad,
-        courseDuration: selected.duration,
+        courseDuration: selected.duration,           // ✅ Usar 'duration'
         courseDurationUnit: selected.durationUnit,
         imageUrl: selected.imagenUrl,
         courseRating: selected.rating,
+        courseLevel: selected.nivel,
+        courseSubtitle: selected.subtitulo,
+        courseCode: selected.codigo,
       },
     });
   };
@@ -58,7 +59,7 @@ export default function PreviewsManager() {
   const handleEditPreview = async (curso) => {
     try {
       // 1. pedir al backend el preview de ese curso
-      const data = await loadByCourse(curso.id); // <- tu context debe devolver el objeto
+      await loadByCourse(curso.id);
       // 2. navegar al mismo componente de preview
       navigate("/previews/nuevo", {
         state: {
@@ -69,6 +70,9 @@ export default function PreviewsManager() {
           courseDurationUnit: curso.durationUnit,
           imageUrl: curso.imagenUrl,
           courseRating: curso.rating,
+          courseLevel: curso.nivel,
+          courseSubtitle: curso.subtitulo,
+          courseCode: curso.codigo,
         },
       });
     } catch (err) {
@@ -83,6 +87,9 @@ export default function PreviewsManager() {
           courseDurationUnit: curso.durationUnit,
           imageUrl: curso.imagenUrl,
           courseRating: curso.rating,
+          courseLevel: curso.nivel,
+          courseSubtitle: curso.subtitulo,
+          courseCode: curso.codigo,
         },
       });
     }

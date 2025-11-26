@@ -19,8 +19,8 @@ export default function FooterNeo({
     ],
   },
   legal = {
-    terms: { href: "/terminos", label: "Términos y condiciones" },
-    privacy: { href: "/privacidad", label: "Política de privacidad" },
+    terms: { href: "/terminos_y_condiciones", label: "Términos y condiciones" },
+    privacy: { href: "/politicas_de_privacidad", label: "Política de privacidad" },
   },
   socials = {
     facebook: "https://facebook.com/",
@@ -76,8 +76,8 @@ export default function FooterNeo({
           <div>
             <h4 className="footer-title">Contacto</h4>
             <ul className="space-y-2">
-              <li><a href="mailto:mqerkacademycienytec@gmail.com" className="footer-link">mqerkacademycienytec@gmail.com</a></li>
-              <li><a href="tel:+520000000000" className="footer-link">+(52) 287 151 5760</a></li>
+              <li><a className="footer-link">mqerkacademycienytec@gmail.com</a></li>
+              <li><a className="footer-link">+(52) 287 151 5760</a></li>
               <li><span className="text-sm text-neutral-500 dark:text-neutral-400">Tuxtepec, Oax.</span></li>
             </ul>
           </div>
