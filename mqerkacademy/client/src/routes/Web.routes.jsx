@@ -36,6 +36,10 @@ function MqerkRoutes() {
               <Route path="/test-asesor" element={<TestAsesor />} />
               <Route path="/credenciales" element={<CredencialesAsesor />} />
               {/* FINAL REGISTRO ASESOR */}
+
+              {/* INICIO REGISTRO ALUMNOS */}
+              
+              {/* FINAL REGISTRO ALUMNOS */}
           </Routes>
         </PreviewProvider>
       </CursosProvider>

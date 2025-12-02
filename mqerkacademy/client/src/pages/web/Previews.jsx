@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, Star, BookOpen, Award, X } from 'lucide-react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { usePreview } from "../../context/PreviewContext";
 import Navbar from "../../components/web/Navbar.jsx";
 
@@ -40,6 +40,12 @@ export default function CoursePreviewView() {
 
   // Estados para los planes de precios
   const [planes, setPlanes] = useState([]);
+
+  const navigate = useNavigate();
+
+  const handleAdquirir = () => {
+    navigate('/estudiantes/suscripcion');
+  };
 
   // Cargar preview al montar el componente
   useEffect(() => {
@@ -476,7 +482,9 @@ export default function CoursePreviewView() {
                         <span className="text-white text-4xl font-bold">${plan.precio}</span>
                       </div>
 
-                      <button className="w-full bg-white text-indigo-600 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all transform hover:scale-105">
+                      <button 
+                      onClick={handleAdquirir}
+                      className="w-full bg-white text-indigo-600 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all transform hover:scale-105">
                         Adquirir
                       </button>
                     </div>
