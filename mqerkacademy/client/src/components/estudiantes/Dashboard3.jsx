@@ -150,4 +150,4 @@ const MisCursosActivos = () => {
   );
 };
 
-export { MisCursosActivos };
+export default MisCursosActivos;
